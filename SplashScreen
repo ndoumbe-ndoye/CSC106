@@ -1,0 +1,47 @@
+var Button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 150;
+    this.height = config.height || 50;
+    this.label = config.label || "Click";
+};
+
+Button.prototype.draw = function() {
+    fill(0, 234, 255);
+    rect(this.x, this.y, this.width, this.height, 5);
+    fill(0, 0, 0);
+    textSize(19);
+    text(this.label, this.x+this.width*0.3, this.y+this.height/1.5);
+};
+ Button.prototype.isMouseInside = function() {
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
+
+
+var btn1 = new Button({
+    x: 212,
+    y: 315,
+    label: "START"
+});
+btn1.draw();
+
+mouseClicked = function(){};
+
+
+var splashScreen = function(){
+background(46, 46, 158);
+fill(255, 255, 255);
+textSize(40);
+text("JEOPARDY",100,72);
+btn1.draw();
+};
+splashScreen();
