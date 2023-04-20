@@ -1,3 +1,29 @@
+var drawGlobe= function() {
+    fill(53, 53, 181);
+    ellipse(200,200,200,181);
+    fill(235, 143, 44);
+    rect(145,152,10,10);
+ rect(162,152,10,10);
+   rect(178,152,10,10);
+   rect(145,168,10,10);
+     rect(145,152,10,10);
+         rect(127,152,10,10);
+             rect(163,168,10,10);
+                 rect(182,167,10,10);
+                     rect(153,183,10,10);
+                         rect(172,183,10,10);
+                             rect(180,199,10,10);
+    rect(272,165,10,10);
+        rect(271,183,10,10);
+            rect(284,190,10,10);
+                rect(212,270,10,10);
+                    rect(228,263,10,10);
+                        rect(228,246,10,10);
+                            rect(250,252,10,10);
+};
+
+
+
 var Button = function(config) {
     this.x = config.x || 0;
     this.y = config.y || 0;
@@ -40,8 +66,12 @@ mouseClicked = function(){};
 var splashScreen = function(){
 background(46, 46, 158);
 fill(255, 255, 255);
-textSize(40);
-text("JEOPARDY",100,72);
+textSize(20);
+text("Ndoumbe and Milan's Game",73,30);
+drawGlobe();
+fill(255, 255, 255);
+textSize(50);
+text("JEOPARDY",72,218);
 btn1.draw();
 };
 splashScreen();
