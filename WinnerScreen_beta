@@ -1,0 +1,65 @@
+var Button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 150;
+    this.height = config.height || 50;
+    this.label = config.label || "Click";
+    this.onClick = config.onClick || function() {};
+};
+
+Button.prototype.draw = function() {
+    strokeWeight(6);
+    stroke(0, 115, 255);
+    fill(0, 234, 255);
+    rect(this.x, this.y, this.width, this.height, 5);
+    fill(0, 0, 0);
+    textSize(19);
+    textAlign(CENTER, BASELINE);
+    text(this.label, this.x+this.width*0.5, this.y+this.height/1.5);
+};
+ Button.prototype.isMouseInside = function() {
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
+
+
+var homeButton = new Button ({
+    x: 125,
+    y: 140,
+    label: "HOME"
+    //Define onClick function
+    
+});
+
+var restartButton = new Button ({
+    x: 125, 
+    y: 200, 
+    label: "RESTART"
+});
+
+//Modify to change scenes
+mouseClicked = function(){};
+
+
+var endScreen = function(){
+    background(46, 46, 158);
+    textAlign(CENTER);
+    textSize(70);
+    fill(174, 252, 247);
+    text("YOU WIN!!!", 200, 70);
+    textSize(50);
+    text("Score :", 200, 120); //Add Actual Score under YOU WIN!!!
+    homeButton.draw();
+    restartButton.draw();
+};
+draw = function() {
+    endScreen();
+};
