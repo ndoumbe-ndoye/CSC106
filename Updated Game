@@ -1,0 +1,253 @@
+
+//global variables
+var currentScene=0;
+var time=0;
+var time=true;
+var hover=false;
+
+//Button Class
+var Button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 150;
+    this.height = config.height || 50;
+    this.label = config.label || "Click";
+    this.onClick = config.onClick || function() {};
+};
+
+Button.prototype.draw = function() {
+    fill(224, 133, 36);
+    rect(this.x, this.y, this.width, this.height, 14);
+    fill(255, 255, 255);
+    textSize(41);
+    textAlign(LEFT, TOP);
+    text(this.label, this.x+37, this.y+this.height/51);
+};
+
+Button.prototype.isMouseInside = function() {
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
+
+
+var start = new Button({
+    x: 231,
+    y: 318,
+    label: "start!",
+    onClick: function() {
+        currentScene=1;
+        time = millis();
+        
+    }
+});
+
+//Tile Class
+var Tile = function(x, y, face) {
+    this.x = x;
+    this.y = y;
+    this.size = 100;
+    this.face = face;
+    this.isFaceUp = false;
+    this.isMatch = false;
+
+};
+
+Tile.prototype.draw = function() {
+    fill(0, 51, 255);
+    strokeWeight(2);
+    rect(this.x, this.y, this.size, this.size, 10);
+    if (this.isFaceUp) {
+        image(this.face, this.x, this.y, this.size, this.size);
+}else {
+    fill(255, 255, 255);
+    textSize(40);
+        text("100", this.x, this.y, this.size, this.size);
+    } };
+
+Tile.prototype.isUnderMouse = function(x, y) {
+    return x >= this.x && x <= this.x + this.size  &&
+        y >= this.y && y <= this.y + this.size;
+};
+
+Tile.prototype.handleMouseOver = function() {
+    if (!this.isFaceUp && this.isUnderMouse(mouseX, mouseY)) {
+        this.isHovered = true;  // track mouse hover
+    }  
+};
+
+Tile.prototype.handleMouseOut = function() {
+    this.isHovered = false;  // reset hover state
+};
+
+// Global config
+var NUM_COLS = 3;
+var NUM_ROWS = 3;
+
+// Declare an array of all possible faces
+var faces = [
+getImage("avatars/starky-sapling"),
+
+];
+
+// Now shuffle the elements of that array
+var shuffleArray = function(array) {
+    var counter = array.length;
+
+    // While there are elements in the array
+    while (counter > 0) {
+        // Pick a random index
+        var ind = Math.floor(Math.random() * counter);
+        // Decrease counter by 1
+        counter--;
+        // And swap the last element with it
+        var temp = array[counter];
+        array[counter] = array[ind];
+        array[ind] = temp;
+    }
+};
+
+
+// Create the tiles
+var tiles = [];
+for (var i = 0; i < NUM_COLS; i++) {
+    for (var j = 0; j < NUM_ROWS; j++) {
+        var tileX = i * 132 + 8;
+        var tileY = j * 104 + 73;
+
+        tiles.push(new Tile(tileX, tileY));
+    }
+}
+
+background(255, 255, 255);
+
+var numTries = 0;
+var numMatches = 0;
+var flippedTiles = [];
+var delayStartFC = null;
+
+//mouse clicked function 
+mouseClicked = function() {
+      if(currentScene===0){
+        start.handleMouseClick();
+        }
+    for (var i = 0; i < tiles.length; i++) {
+        var tile = tiles[i];
+        if (tile.isUnderMouse(mouseX, mouseY)) {
+            if (flippedTiles.length < 4&& !tile.isFaceUp) {
+                tile.isFaceUp = true;
+                flippedTiles.push(tile);
+                if (flippedTiles.length === 4) {
+                    numTries++;
+                    if (flippedTiles[0].face === flippedTiles[1].face && flippedTiles[1]                            .face === flippedTiles[2].face && flippedTiles[2].face === flippedTiles[3].face) {
+                        flippedTiles[0].isMatch = true;
+                        flippedTiles[1].isMatch = true;
+                        flippedTiles[2].isMatch = true;
+                        flippedTiles[3].isMatch = true;
+                      
+                        flippedTiles.length = 0;
+                        numMatches++;
+                    }
+                    delayStartFC = frameCount;
+                }
+            } 
+            loop();
+        }
+    }
+};
+
+//Different Screens
+
+
+var drawGlobe= function() {
+    fill(53, 53, 181);
+    ellipse(200,200,200,181);
+    fill(235, 143, 44);
+    rect(145,152,10,10);
+ rect(162,152,10,10);
+   rect(178,152,10,10);
+   rect(145,168,10,10);
+     rect(145,152,10,10);
+         rect(127,152,10,10);
+             rect(163,168,10,10);
+                 rect(182,167,10,10);
+                     rect(153,183,10,10);
+                         rect(172,183,10,10);
+                             rect(180,199,10,10);
+    rect(272,165,10,10);
+        rect(271,183,10,10);
+            rect(284,190,10,10);
+                rect(212,270,10,10);
+                    rect(228,263,10,10);
+                        rect(228,246,10,10);
+                            rect(250,252,10,10);
+};
+
+
+var splashScreen = function(){
+currentScene=0;
+background(46, 46, 158);
+fill(255, 255, 255);
+textSize(20);
+text("Ndoumbe and Milan's Game",73,30);
+drawGlobe();
+fill(255, 255, 255);
+textSize(50);
+text("JEOPARDY",78,182);
+ start.draw();
+};
+
+
+var playGame = function(){
+    currentScene=1;
+background(46, 46, 158);
+     rect(0,0,415,27);
+    fill(109, 130, 17);
+    textSize(15);
+    var seconds =  round((millis()- time)/1000);
+    text("Time : "+ seconds, 15,10);
+    text("Number of Tries:"+ numTries,180,10);
+    
+
+    if (delayStartFC && (frameCount - delayStartFC) > 40) {
+        for (var i = 0; i < tiles.length; i++) {
+            var tile = tiles[i];
+            if (!tile.isMatch) {
+                tile.isFaceUp = false;
+            }
+        }
+        flippedTiles = [];
+        delayStartFC = null;
+        noLoop();
+    }
+    
+    for (var i = 0; i < tiles.length; i++) {
+        tiles[i].draw();
+    }
+    
+    if (numMatches === tiles.length/4) {
+        time=false;
+        textSize(20);
+        text("You found them all in " + numTries + " tries!", 20, 300);
+        
+    }
+  
+};
+
+//draw function to call different screens
+draw = function() {
+    if(currentScene===0){splashScreen();}
+    else if(currentScene===1){playGame();}
+   
+};
+
+noLoop();
+
+
