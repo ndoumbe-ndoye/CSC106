@@ -3,7 +3,6 @@
 var currentScene=0;
 var time=0;
 var time=true;
-var hover=false;
 
 //Button Class
 var Button = function(config) {
@@ -39,8 +38,8 @@ Button.prototype.handleMouseClick = function() {
 
 
 var start = new Button({
-    x: 231,
-    y: 318,
+    x: 430,
+    y: 511,
     label: "start!",
     onClick: function() {
         currentScene=1;
@@ -53,10 +52,10 @@ var start = new Button({
 var Tile = function(x, y, face) {
     this.x = x;
     this.y = y;
-    this.size = 100;
+    this.size = 110;
     this.face = face;
     this.isFaceUp = false;
-    this.isMatch = false;
+
 
 };
 
@@ -72,55 +71,45 @@ Tile.prototype.draw = function() {
         text("100", this.x, this.y, this.size, this.size);
     } };
 
-Tile.prototype.isUnderMouse = function(x, y) {
-    return x >= this.x && x <= this.x + this.size  &&
-        y >= this.y && y <= this.y + this.size;
-};
-
-Tile.prototype.handleMouseOver = function() {
-    if (!this.isFaceUp && this.isUnderMouse(mouseX, mouseY)) {
-        this.isHovered = true;  // track mouse hover
-    }  
-};
-
-Tile.prototype.handleMouseOut = function() {
-    this.isHovered = false;  // reset hover state
-};
 
 // Global config
-var NUM_COLS = 3;
-var NUM_ROWS = 3;
+var NUM_COLS = 4;
+var NUM_ROWS = 4;
 
 // Declare an array of all possible faces
 var faces = [
-getImage("avatars/starky-sapling"),
-
+    getImage("avatars/starky-sapling"),
+    getImage("avatars/starky-seed"),
+    getImage("creatures/OhNoes-Hmm"),
+    getImage("creatures/OhNoes-Happy"),
+    getImage("avatars/primosaur-seed"),
+    getImage("avatars/primosaur-sapling"),
+  
+    
 ];
-
-// Now shuffle the elements of that array
-var shuffleArray = function(array) {
-    var counter = array.length;
-
-    // While there are elements in the array
-    while (counter > 0) {
-        // Pick a random index
-        var ind = Math.floor(Math.random() * counter);
-        // Decrease counter by 1
-        counter--;
-        // And swap the last element with it
-        var temp = array[counter];
-        array[counter] = array[ind];
-        array[ind] = temp;
-    }
-};
+// Make an array which has 4 of each, then randomize it
+var possibleFaces = faces.slice(0);
+var selected = [];
+for (var i = 0; i < (NUM_COLS * NUM_ROWS) / 4; i++) {
+    // Randomly pick one from the array of remaining faces
+    var randomInd = floor(random(possibleFaces.length));
+    var face = possibleFaces[randomInd];
+    // Push four times into array
+    selected.push(face);
+    selected.push(face);
+    selected.push(face);
+    selected.push(face);
+    // Remove from array
+    possibleFaces.splice(randomInd, 1);
+}
 
 
 // Create the tiles
 var tiles = [];
 for (var i = 0; i < NUM_COLS; i++) {
     for (var j = 0; j < NUM_ROWS; j++) {
-        var tileX = i * 132 + 8;
-        var tileY = j * 104 + 73;
+        var tileX = i * 132 + 80;
+        var tileY = j * 123 + 115;
 
         tiles.push(new Tile(tileX, tileY));
     }
@@ -133,61 +122,60 @@ var numMatches = 0;
 var flippedTiles = [];
 var delayStartFC = null;
 
-//mouse clicked function 
 mouseClicked = function() {
-      if(currentScene===0){
+    if (currentScene === 0) {
         start.handleMouseClick();
+    } else {
+        if (delayStartFC !== null && frameCount - delayStartFC < 30) {
+            // ignore clicks during delay period
+            return;
         }
-    for (var i = 0; i < tiles.length; i++) {
-        var tile = tiles[i];
-        if (tile.isUnderMouse(mouseX, mouseY)) {
-            if (flippedTiles.length < 4&& !tile.isFaceUp) {
-                tile.isFaceUp = true;
-                flippedTiles.push(tile);
-                if (flippedTiles.length === 4) {
+        for (var i = 0; i < tiles.length; i++) {
+            var tile = tiles[i];
+            if (tile.isUnderMouse(mouseX, mouseY)) {
+                if (flippedTiles.length < 2 && !tile.isFaceUp) {
+                    tile.isFaceUp = true;
+                    flippedTiles.push(tile);
+                }
+                if (flippedTiles.length === 2) {
                     numTries++;
-                    if (flippedTiles[0].face === flippedTiles[1].face && flippedTiles[1]                            .face === flippedTiles[2].face && flippedTiles[2].face === flippedTiles[3].face) {
+                    if (flippedTiles[0].face === flippedTiles[1].face) {
                         flippedTiles[0].isMatch = true;
                         flippedTiles[1].isMatch = true;
-                        flippedTiles[2].isMatch = true;
-                        flippedTiles[3].isMatch = true;
-                      
                         flippedTiles.length = 0;
                         numMatches++;
+                    } else {
+                        delayStartFC = frameCount;
                     }
-                    delayStartFC = frameCount;
                 }
-            } 
-            loop();
+                break; 
+            }
         }
     }
 };
 
-//Different Screens
-
-
 var drawGlobe= function() {
     fill(53, 53, 181);
-    ellipse(200,200,200,181);
+    ellipse(311,200,244,234);
     fill(235, 143, 44);
-    rect(145,152,10,10);
- rect(162,152,10,10);
-   rect(178,152,10,10);
-   rect(145,168,10,10);
-     rect(145,152,10,10);
-         rect(127,152,10,10);
-             rect(163,168,10,10);
-                 rect(182,167,10,10);
-                     rect(153,183,10,10);
-                         rect(172,183,10,10);
-                             rect(180,199,10,10);
-    rect(272,165,10,10);
-        rect(271,183,10,10);
-            rect(284,190,10,10);
-                rect(212,270,10,10);
-                    rect(228,263,10,10);
-                        rect(228,246,10,10);
-                            rect(250,252,10,10);
+rect(381,152,10,10);
+rect(363,152,10,10);
+rect(348,152,10,10);
+rect(256,152,10,10);
+rect(237,152,10,10);
+rect(127,152,10,10);
+rect(252,168,10,10);
+rect(182,167,10,10);
+rect(153,183,10,10);
+rect(172,183,10,10);
+rect(180,199,10,10);
+rect(272,165,10,10);
+rect(271,183,10,10);
+rect(284,190,10,10);
+rect(362,273,10,10);
+rect(380,273,10,10);
+rect(374,253,10,10);
+rect(389,252,10,10);
 };
 
 
@@ -196,11 +184,11 @@ currentScene=0;
 background(46, 46, 158);
 fill(255, 255, 255);
 textSize(20);
-text("Ndoumbe and Milan's Game",73,30);
+text("Ndoumbe and Milan's Game",169,30);
 drawGlobe();
 fill(255, 255, 255);
 textSize(50);
-text("JEOPARDY",78,182);
+text("JEOPARDY",181,186);
  start.draw();
 };
 
@@ -208,7 +196,7 @@ text("JEOPARDY",78,182);
 var playGame = function(){
     currentScene=1;
 background(46, 46, 158);
-     rect(0,0,415,27);
+     rect(0,0,615,36);
     fill(109, 130, 17);
     textSize(15);
     var seconds =  round((millis()- time)/1000);
@@ -232,12 +220,7 @@ background(46, 46, 158);
         tiles[i].draw();
     }
     
-    if (numMatches === tiles.length/4) {
-        time=false;
-        textSize(20);
-        text("You found them all in " + numTries + " tries!", 20, 300);
-        
-    }
+
   
 };
 
