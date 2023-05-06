@@ -1,0 +1,8 @@
+var pauseScreen = function(){
+    background(0, 204, 27);
+    textSize(50);
+    text("PAUSED", 200, 40);
+    pauseResumeButton.draw();
+    pauseHomeButton.draw();
+    pauseRestartButton.draw();
+};
