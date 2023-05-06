@@ -49,59 +49,49 @@ var start = new Button({
 });
 
 //Tile Class
-var Tile = function(x, y, face) {
+var Tile = function(x, y, face, question) {
     this.x = x;
     this.y = y;
     this.size = 110;
     this.face = face;
     this.isFaceUp = false;
-
-
+    this.question = question;
 };
-
 Tile.prototype.draw = function() {
-    fill(0, 51, 255);
-    strokeWeight(2);
-    rect(this.x, this.y, this.size, this.size, 10);
-    if (this.isFaceUp) {
-        image(this.face, this.x, this.y, this.size, this.size);
-}else {
+  fill(0, 51, 255);
+  strokeWeight(2);
+  rect(this.x, this.y, this.size, this.size, 10);
+  if (this.isFaceUp) {
+    image(this.face, this.x, this.y, this.size, this.size);
+  } else {
     fill(255, 255, 255);
-    textSize(40);
-        text("100", this.x, this.y, this.size, this.size);
-    } };
-
-
+    textSize(14);
+    textAlign(CENTER, CENTER);
+    text(this.question, this.x + this.size / 2, this.y + this.size / 2);
+  }
+};
 // Global config
 var NUM_COLS = 4;
 var NUM_ROWS = 4;
 
 // Declare an array of all possible faces
-var faces = [
-    getImage("avatars/starky-sapling"),
-    getImage("avatars/starky-seed"),
-    getImage("creatures/OhNoes-Hmm"),
-    getImage("creatures/OhNoes-Happy"),
-    getImage("avatars/primosaur-seed"),
-    getImage("avatars/primosaur-sapling"),
-  
-    
+var questions = [  // History 
+{ category: "History", points: 100, question: "What was the Walt Disney Company originally named?", options: ["Disney Production", "The Walt Disney Studio", "Disney Brothers Cartoon Studio", "Walt Disney Animation"], answer: "Disney Brothers Cartoon Studio" },
+  // Character
+  { category: "Character", points: 100, question: "What was Raven Symone's super power?", options: ["Flying", "Reading minds", "Visions", "Strength"], answer: "Visions" },
+  { category: "Character", points: 200, question: "How many Disney princesses are there?", options: ["30", "20", "15", "12"], answer: "12" },
+  { category: "Character", points: 400, question: "When was Mickey Mouse created?", options: ["1930", "1941", "1932", "1928"], answer: "1928" },
+  // TV Show
+  { category: "TV Show", points: 100, question: "How many Ross kids are there?", options: ["3", "4", "2", "5"], answer: "4" },
+  { category: "TV Show", points: 200, question: "In 'Wizards of Waverly Place,' who won the wizard competition?", options: ["Alex", "Justin", "Max", "Harper"], answer: "Alex" },
+  { category: "TV Show", points: 300, question: "Who was Hannah Montana's first boyfriend?", options: ["Jake", "Jesse", "Derek", "Rioc"], answer: "Jake" },
+  { category: "TV Show", points: 400, question: "In 'Gravity Falls,' what was Bill's inspiration for his cipher?", options: ["The pyramids", "The triangle on an American dollar", "A baby educational block", "A billboard for a psychic"], answer: "The triangle on an American dollar" },
+  // Movies
+  { category: "Movies", points: 100, question: "What does 'Hakuna Matata' mean?", options: ["Less stress", "No worries", "Stress", "Be calm"], answer: "No worries" },
+  { category: "Movies", points: 200, question: "In 'Lemonade Mouth,' how did the group meet?", options: ["P.E. class", "Church", "Detention", "Auditions"], answer: "Detention" },
+  { category: "Movies", points: 300, question: "How many siblings does Prince Hans of the Southern Isles have in 'Frozen'?", options: ["12", "13", "10", "15"], answer: "12" },
+  { category: "Movies", points: 400, question: "In 'Camp Rock,' what is the name of Mitchie's mother?", options: ["Bonnie", "Connie", "Betty", "Michael"], answer: "Bonnie" },
 ];
-// Make an array which has 4 of each, then randomize it
-var possibleFaces = faces.slice(0);
-var selected = [];
-for (var i = 0; i < (NUM_COLS * NUM_ROWS) / 4; i++) {
-    // Randomly pick one from the array of remaining faces
-    var randomInd = floor(random(possibleFaces.length));
-    var face = possibleFaces[randomInd];
-    // Push four times into array
-    selected.push(face);
-    selected.push(face);
-    selected.push(face);
-    selected.push(face);
-    // Remove from array
-    possibleFaces.splice(randomInd, 1);
-}
 
 
 // Create the tiles
@@ -111,7 +101,11 @@ for (var i = 0; i < NUM_COLS; i++) {
         var tileX = i * 132 + 80;
         var tileY = j * 123 + 115;
 
-        tiles.push(new Tile(tileX, tileY));
+        var randomQuestionIndex = Math.floor(Math.random() * questions.length);
+        var question = questions[randomQuestionIndex];
+        questions.splice(randomQuestionIndex, 1);
+
+        tiles.push(new Tile(tileX, tileY, null, question));
     }
 }
 
@@ -163,12 +157,12 @@ rect(363,152,10,10);
 rect(348,152,10,10);
 rect(256,152,10,10);
 rect(237,152,10,10);
-rect(127,152,10,10);
+rect(217,152,10,10);
 rect(252,168,10,10);
-rect(182,167,10,10);
-rect(153,183,10,10);
-rect(172,183,10,10);
-rect(180,199,10,10);
+rect(232,167,10,10);
+rect(251,183,10,10);
+rect(380,172,10,10);
+rect(395,184,10,10);
 rect(272,165,10,10);
 rect(271,183,10,10);
 rect(284,190,10,10);
