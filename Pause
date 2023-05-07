@@ -1,0 +1,1 @@
+var pauseResumeButton = new Button({x:120, y:118, width:160, height:70, label:"Resume", onClick:function(){currentScene = 2;}, color:color(0, 117, 12), text
