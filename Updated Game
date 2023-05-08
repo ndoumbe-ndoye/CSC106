@@ -48,75 +48,193 @@ var start = new Button({
 });
 
 //Tile Class
-var Tile = function(x, y, face, question) {
+var Tile = function(x, y, question) {
     this.x = x;
     this.y = y;
     this.size = 121;
-    this.face = face;
     this.isFaceUp = false;
     this.question = question;
+    this.color = color(0, 51, 255);
 };
+
 Tile.prototype.draw = function() {
-  fill(0, 51, 255);
-  strokeWeight(2);
-rect(this.x, this.y, this.size, this.size, 5);
-  if (this.isFaceUp) {
-    image(this.face, this.x, this.y, this.size, this.size);
-  } else {
+    fill(this.color);
+    strokeWeight(2);
+    rect(this.x, this.y, this.size, this.size, 5);
+    if (this.isFaceUp) {
+        image(this.face, this.x, this.y, this.size, this.size);
+    } else {
     fill(255, 255, 255);
     textSize(14);
     textAlign(CENTER, CENTER);
-    text(this.question, this.x + this.size / 2, this.y + this.size / 2);
-  }
+    text(this.question.points, this.x + this.size / 2, this.y + this.size / 2);
+    }
 };
+
+Tile.prototype.isMouseWithin = function(x, y) {
+    return x >= this.x && x <= this.x + this.size &&
+        y >= this.y && y <= this.y + this.size;
+};
+
+Tile.prototype.mouseHover = function() {
+    if (this.isMouseWithin(mouseX, mouseY)) {
+        this.color = color(0, 132, 255);
+    }
+    else {
+        this.color = color(0, 51, 255);
+    }
+};
+
 // Global config
 var NUM_COLS = 4;
 var NUM_ROWS = 4;
 
-// Declare an array of all possible faces
-var questions = [  // History 
-{ category: "History", points: 100, question: "What was the Walt Disney Company originally named?", options: ["Disney Production", "The Walt Disney Studio", "Disney Brothers Cartoon Studio", "Walt Disney Animation"], answer: "Disney Brothers Cartoon Studio" },
-  // Character
-  { category: "Character", points: 100, question: "What was Raven Symone's super power?", options: ["Flying", "Reading minds", "Visions", "Strength"], answer: "Visions" },
-  { category: "Character", points: 200, question: "How many Disney princesses are there?", options: ["30", "20", "15", "12"], answer: "12" },
-  { category: "Character", points: 400, question: "When was Mickey Mouse created?", options: ["1930", "1941", "1932", "1928"], answer: "1928" },
-  // TV Show
-  { category: "TV Show", points: 100, question: "How many Ross kids are there?", options: ["3", "4", "2", "5"], answer: "4" },
-  { category: "TV Show", points: 200, question: "In 'Wizards of Waverly Place,' who won the wizard competition?", options: ["Alex", "Justin", "Max", "Harper"], answer: "Alex" },
-  { category: "TV Show", points: 300, question: "Who was Hannah Montana's first boyfriend?", options: ["Jake", "Jesse", "Derek", "Rioc"], answer: "Jake" },
-  { category: "TV Show", points: 400, question: "In 'Gravity Falls,' what was Bill's inspiration for his cipher?", options: ["The pyramids", "The triangle on an American dollar", "A baby educational block", "A billboard for a psychic"], answer: "The triangle on an American dollar" },
-  // Movies
-  { category: "Movies", points: 100, question: "What does 'Hakuna Matata' mean?", options: ["Less stress", "No worries", "Stress", "Be calm"], answer: "No worries" },
-  { category: "Movies", points: 200, question: "In 'Lemonade Mouth,' how did the group meet?", options: ["P.E. class", "Church", "Detention", "Auditions"], answer: "Detention" },
-  { category: "Movies", points: 300, question: "How many siblings does Prince Hans of the Southern Isles have in 'Frozen'?", options: ["12", "13", "10", "15"], answer: "12" },
-  { category: "Movies", points: 400, question: "In 'Camp Rock,' what is the name of Mitchie's mother?", options: ["Bonnie", "Connie", "Betty", "Michael"], answer: "Bonnie" },
+/*** QUESTIONS ***/
+var questions = [ 
+    // History 
+    { 
+        category: "History", 
+        points: 100, 
+        question: "What was the Walt Disney Company originally named?", 
+        options: ["Disney Production", "The Walt Disney Studio", "Disney Brothers Cartoon Studio", "Walt Disney Animation"], 
+        answer: "Disney Brothers Cartoon Studio" 
+    },
+    { 
+        category: "History", 
+        points: 200, 
+        question: "How many film studios does Disney own?", 
+        options: ["Seven", "Two", "Five", "Eight"], 
+        answer: "Eight"
+    },
+    {
+        category: "History", 
+        points: 300, 
+        question: "What was the Walt Disney Company originally named?", 
+        options: ["Disney Production", "The Walt Disney Studio", "Disney Brothers Cartoon Sudio", "Walt Disney Animation"], 
+        answer: "Disney Brothers Cartoon Studio"
+    }, 
+    {
+        category: "History",
+        points: "NEED A QUESTION", 
+        question: "NEED A QUESTION",
+        options: "NEED A QUESTION", 
+        answer: "NEED A QUESTION"
+    }, 
+    {
+        category: "Movies",
+        points: 100,
+        question: "What does 'Hakuna Matata' mean?",
+        options: ["Less Stress", "No Worries", "Stress", "Be Calm"],
+        answer: "No Worries"
+    }, 
+    {
+        category: "Movies",
+        points: 200, 
+        question: "In Lemonade Mouth, how did the group meet?",
+        options: ["P.E. Class", "Church", "Detention", "Auditions"],
+        answer: "Detention"
+    },
+    {
+        category: "Movies", 
+        points: 300, 
+        question: "How many sibilings does Prince Hans of the Southern Isles have in 'Frozen'?", 
+        options: ["12", "13", "10", "15"],
+        answer: "12"
+    }, 
+    {
+        category: "Movies", 
+        points: 400, 
+        question: "In Camp-Rock, what is the name of Mitchie's mother?", 
+        options: ["Bonnie", "Connie", "Betty", "Micheal"],
+        answer: "Bonnie"
+    },
+    {
+        category: "TV Shows",
+        points: 100, 
+        question: "How many Ross kids are there?", 
+        options: ["3", "4", "2", "5"],
+        answer: "4"
+    },
+    {
+        category: "TV Shows", 
+        points: 200,
+        question: "In Wizards of Waverly Place, who won the wizard competition?", 
+        options: ["Alex", "Justin", "Max", "Harper"],
+        answer: "Alex"
+    },
+    {
+        category: "TV Shows",
+        points: 300, 
+        question: "Who was Hannah Montana's first boyfriend?", 
+        options: ["Alex", "Justin", "Max", "Harper"],
+        answer: "Alex"
+    },
+    {
+        category: "TV Shows",
+        points: 400, 
+        question: "In Gravity Falls, what was Bills inspiration for his cypher?",
+        options: ["The Pyramids", "The Triangle on the American Dollar", "A Baby Educational Block", "A Billboard for a Psychic"],
+        answer: "The Triangle on the American Dollar"
+    }, 
+    {
+        category: "Character", 
+        points: 100, 
+        question: "What was Raven Simons super power?",
+        options: ["Flying", "Reading Minds", "Vision", "Strength"], 
+        answer: "Vision"
+    }, 
+    {
+        category: "Character", 
+        points: 200, 
+        question: "How many Disney Princesses are there?", 
+        options: ["30", "20", "15", "12"],
+        answer: "12"
+    }, 
+    {
+        category: "Character",
+        points: "NEED A QUESTION", 
+        question: "NEED A QUESTION",
+        options: "NEED A QUESTION",
+        answer: "NEED A QUESTION"
+    },
+    {
+        category: "Character", 
+        points: 400, 
+        question: "When was Mickey Mouse created?",
+        options: ["1930", "1941", "1932", "1928"],
+        answer: "1928"
+    }
+    
 ];
-var catergory = function() {
-  fill(0, 51, 255);
-rect(81,67,119,44);
-rect(213,67,119,44);
-rect(344,67,119,44);
-rect(476,67,119,44);
+var categories = function() {
+    fill(0, 51, 255);
+    rect(81,67,119,44);
+    rect(213,67,119,44);
+    rect(344,67,119,44);
+    rect(476,67,119,44);
     fill(255, 255, 255);
     textSize(20);
     text ("History",138,89);
     text("Movies",273,89);
-    text("Tv shows",402,89);
-    text("characters",536,89);
+    text("TV shows",402,89);
+    text("Characters",536,89);
 };
 
 // Create the tiles
 var tiles = [];
+var k = 0;
 for (var i = 0; i < NUM_COLS; i++) {
     for (var j = 0; j < NUM_ROWS; j++) {
         var tileX = i * 132 + 80;
         var tileY = j * 123 + 115;
-
+/***
         var randomQuestionIndex = Math.floor(Math.random() * questions.length);
         var question = questions[randomQuestionIndex];
         questions.splice(randomQuestionIndex, 1);
-
-        tiles.push(new Tile(tileX, tileY, null, question));
+        ***/
+        
+        tiles.push(new Tile(tileX, tileY, questions[k]));
+        k++;
     }
 }
 
@@ -159,34 +277,35 @@ mouseClicked = function() {
     }
 };
 
-var drawGlobe= function() {
-    fill(53, 53, 181);
-    ellipse(311,200,244,234);
-    fill(235, 143, 44);
-rect(381,152,10,10);
-rect(363,152,10,10);
-rect(348,152,10,10);
-rect(256,152,10,10);
-rect(237,152,10,10);
-rect(217,152,10,10);
-rect(252,168,10,10);
-rect(232,167,10,10);
-rect(251,183,10,10);
-rect(380,172,10,10);
-rect(395,184,10,10);
-rect(272,165,10,10);
-rect(271,183,10,10);
-rect(284,190,10,10);
-rect(362,273,10,10);
-rect(380,273,10,10);
-rect(374,253,10,10);
-rect(389,252,10,10);
-};
+
 
 
 var splashScreen = function(){
 currentScene=0;
 background(46, 46, 158);
+var drawGlobe= function() {
+    fill(53, 53, 181);
+    ellipse(311,200,244,234);
+    fill(235, 143, 44);
+    rect(381,152,10,10);
+    rect(363,152,10,10);
+    rect(348,152,10,10);
+    rect(256,152,10,10);
+    rect(237,152,10,10);
+    rect(217,152,10,10);
+    rect(252,168,10,10);
+    rect(232,167,10,10);
+    rect(251,183,10,10);
+    rect(380,172,10,10);
+    rect(395,184,10,10);
+    rect(272,165,10,10);
+    rect(271,183,10,10);
+    rect(284,190,10,10);
+    rect(362,273,10,10);
+    rect(380,273,10,10);
+    rect(374,253,10,10);
+    rect(389,252,10,10);
+};
 fill(255, 255, 255);
 textSize(20);
 text("Ndoumbe and Milan's Game",169,30);
@@ -204,17 +323,17 @@ var pauseScreen = function(){
 
 var playGame = function(){
     currentScene=1;
-background(46, 46, 158);
-rect(0,0,615,40);
+    background(46, 46, 158);
+    rect(0,0,615,40);
     fill(109, 130, 17);
     textSize(15);
     var seconds =  round((millis()- time)/1000);
     text("Time : "+ seconds, 48,10);
     text("Number of Tries:"+ numTries,180,10);
 
-    catergory();
+    categories();
 
-if (delayStartFC !== null && (frameCount - delayStartFC) > 40) {
+    if (delayStartFC !== null && (frameCount - delayStartFC) > 40) {
         for (var i = 0; i < tiles.length; i++) {
             var tile = tiles[i];
             if (!tile.isMatch) {
@@ -228,6 +347,7 @@ if (delayStartFC !== null && (frameCount - delayStartFC) > 40) {
     
     for (var i = 0; i < tiles.length; i++) {
         tiles[i].draw();
+        tiles[i].mouseHover();
     }
     
 
