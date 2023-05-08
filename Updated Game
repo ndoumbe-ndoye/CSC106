@@ -207,17 +207,17 @@ var questions = [
     
 ];
 var categories = function() {
-    fill(0, 51, 255);
-    rect(81,67,119,44);
-    rect(213,67,119,44);
-    rect(344,67,119,44);
-    rect(476,67,119,44);
+    fill(0, 37, 186);
+    rect(42,67,119,44);
+    rect(174,67,119,44);
+    rect(305,67,119,44);
+    rect(437,67,119,44);
     fill(255, 255, 255);
     textSize(20);
-    text ("History",138,89);
-    text("Movies",273,89);
-    text("TV shows",402,89);
-    text("Characters",536,89);
+    text ("History",103,89);
+    text("Movies",234,89);
+    text("TV shows",366,89);
+    text("Characters",496,89);
 };
 
 // Create the tiles
@@ -225,13 +225,8 @@ var tiles = [];
 var k = 0;
 for (var i = 0; i < NUM_COLS; i++) {
     for (var j = 0; j < NUM_ROWS; j++) {
-        var tileX = i * 132 + 80;
+        var tileX = i * 132 + 40;
         var tileY = j * 123 + 115;
-/***
-        var randomQuestionIndex = Math.floor(Math.random() * questions.length);
-        var question = questions[randomQuestionIndex];
-        questions.splice(randomQuestionIndex, 1);
-        ***/
         
         tiles.push(new Tile(tileX, tileY, questions[k]));
         k++;
