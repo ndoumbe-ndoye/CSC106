@@ -1,0 +1,520 @@
+
+//global variables
+var currentScene = 0;
+var time=0;
+var score = 0;
+var flippedTiles = [];
+
+
+
+//Button Class
+var Button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 150;
+    this.height = config.height || 50;
+    this.label = config.label || "Click";
+    this.onClick = config.onClick || function() {};
+    this.labelX = config.labelX || 0;
+    this.labelY = config.labelY || 0;
+    this.color = config.color || color(224, 133, 36);
+};
+
+Button.prototype.draw = function() {
+    fill(this.color);
+    rect(this.x, this.y, this.width, this.height, 14);
+    fill(255, 255, 255);
+    textSize(41);
+    textAlign(CENTER, CENTER);
+    text(this.label, this.labelX, this.labelY);
+};
+
+Button.prototype.isMouseInside = function() {
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
+
+
+var start = new Button({
+    x: 230,
+    y: 380,
+    label: "start!",
+    labelX: 300,
+    labelY: 402,
+    onClick: function() {
+        currentScene=1;
+        time = millis();
+        
+    }
+});
+
+var cont = new Button({
+    x: 200,
+    y: 450,
+    width: 200,
+    label: "continue",
+    labelX: 300,
+    labelY: 472,
+    onClick: function() {
+        currentScene = 1;
+    }
+});
+
+var home = new Button({
+    x: 150, 
+    y: 263,
+    label: "Return Home",
+    width: 300,
+    labelX: 300,
+    labelY: 288,
+    color: color(0, 77, 255),
+    onClick: function() {
+        currentScene = 0;
+    }
+});
+
+//Tile Class
+var Tile = function(x, y, question) {
+    this.x = x;
+    this.y = y;
+    this.size = 121;
+    this.tileOpened = false;
+    this.question = question;
+    this.color = color(0, 51, 255);
+};
+
+Tile.prototype.draw = function() {
+    fill(this.color);
+    strokeWeight(2);
+    rect(this.x, this.y, this.size, this.size, 5);
+    if (this.tileOpened) {
+        this.color = color(92, 170, 242);
+    } else {
+    fill(255, 255, 255);
+    textSize(40);
+    textAlign(CENTER, CENTER);
+    text(this.question.points, this.x + this.size / 2, this.y + this.size / 2);
+    }
+};
+
+Tile.prototype.isMouseWithin = function(x, y) {
+    return x >= this.x && x <= this.x + this.size &&
+        y >= this.y && y <= this.y + this.size;
+};
+
+Tile.prototype.mouseHover = function() {
+    if (this.isMouseWithin(mouseX, mouseY)) {
+        this.color = color(0, 132, 255);
+    }
+    else {
+        this.color = color(0, 51, 255);
+    }
+};
+
+// Global config
+var NUM_COLS = 4;
+var NUM_ROWS = 4;
+
+/*** QUESTIONS ***/
+var questions = [ 
+    // History 
+    { 
+        category: "History", 
+        points: 100, 
+        question: "Disney's most famous mascot", 
+        options: ["Donald Duck", "Minnie Mouse", "Mickey Mouse", "Goofy"], 
+        answer: "Mickey Mouse" 
+    },
+    { 
+        category: "History", 
+        points: 200, 
+        question: "The number of film studios Disney owns", 
+        options: ["Seven", "Two", "Five", "Eight"], 
+        answer: "Eight"
+    },
+    {
+        category: "History", 
+        points: 300, 
+        question: "The orginal name of the Walt Disney Company", 
+        options: ["Disney Production", "The Walt Disney Studio", "Disney Brothers Cartoon Sudio", "Walt Disney Animation"], 
+        answer: "Disney Brothers Cartoon Studio"
+    }, 
+    {
+        category: "History",
+        points: 400, 
+        question: "This year is when Walt Disney was born",
+        options: ["1890", "1901", "1897", "1903"], 
+        answer: "1901"
+    }, 
+    {
+        category: "Movies",
+        points: 100,
+        question: "Also know as 'Hakuna Matata'",
+        options: ["Less Stress", "No Worries", "Stress", "Be Calm"],
+        answer: "No Worries"
+    }, 
+    {
+        category: "Movies",
+        points: 200, 
+        question: "This is how the group met in Lemonade Mouth",
+        options: ["P.E. Class", "Church", "Detention", "Auditions"],
+        answer: "Detention"
+    },
+    {
+        category: "Movies", 
+        points: 300, 
+        question: "Prince Hans of the Southern Isles has this many sibilings in 'Frozen'", 
+        options: ["12", "13", "10", "15"],
+        answer: "12"
+    }, 
+    {
+        category: "Movies", 
+        points: 400, 
+        question: "Is the name of Mitchie's Mother in Camp-Rock", 
+        options: ["Bonnie", "Connie", "Betty", "Micheal"],
+        answer: "Bonnie"
+    },
+    {
+        category: "TV Shows",
+        points: 100, 
+        question: "There are this many Ross Kids", 
+        options: ["3", "4", "2", "5"],
+        answer: "4"
+    },
+    {
+        category: "TV Shows", 
+        points: 200,
+        question: "This person won the wizard competition in Wizards of Waverly Place", 
+        options: ["Alex", "Justin", "Max", "Harper"],
+        answer: "Alex"
+    },
+    {
+        category: "TV Shows",
+        points: 300, 
+        question: "This was Hannah Montana's first boyfriend", 
+        options: ["Alex", "Justin", "Max", "Harper"],
+        answer: "Alex"
+    },
+    {
+        category: "TV Shows",
+        points: 400, 
+        question: "This was the inspiration for Bills cypher in Gravity Falls",
+        options: ["The Pyramids", "The Triangle on the American Dollar", "A Baby Educational Block", "A Billboard for a Psychic"],
+        answer: "The Triangle on the American Dollar"
+    }, 
+    {
+        category: "Character", 
+        points: 100, 
+        question: "This is Raven Simons super power",
+        options: ["Flying", "Reading Minds", "Vision", "Strength"], 
+        answer: "Vision"
+    }, 
+    {
+        category: "Character", 
+        points: 200, 
+        question: "This is how many Disney Princesses there are", 
+        options: ["30", "20", "15", "12"],
+        answer: "12"
+    }, 
+    {
+        category: "Character",
+        points: 300, 
+        question: "This was the only Disney Princess based on a real person",
+        options: ["Mulan", "Moana", "Pocahontas", "Jasmine"],
+        answer: "Pocahontas"
+    },
+    {
+        category: "Character", 
+        points: 400, 
+        question: "This was the year in which Mickey Mouse was created",
+        options: ["1930", "1941", "1932", "1928"],
+        answer: "1928"
+    }
+    
+];
+
+
+var categories = function() {
+    fill(0, 37, 186);
+    rect(42,67,119,44);
+    rect(174,67,119,44);
+    rect(305,67,119,44);
+    rect(437,67,119,44);
+    fill(255, 255, 255);
+    textSize(20);
+    text ("History",103,89);
+    text("Movies",234,89);
+    text("TV shows",366,89);
+    text("Characters",496,89);
+};
+
+// Create the tiles
+var tiles = [];
+var k = 0;
+for (var i = 0; i < NUM_COLS; i++) {
+    for (var j = 0; j < NUM_ROWS; j++) {
+        var tileX = i * 132 + 40;
+        var tileY = j * 123 + 115;
+        
+        tiles.push(new Tile(tileX, tileY, questions[k]));
+        k++;
+    }
+}
+
+
+
+
+var splashScreen = function(){
+currentScene=0;
+flippedTiles = [];
+
+background(46, 46, 158);
+var drawGlobe= function() {
+    fill(53, 53, 181);
+    ellipse(311,200,244,234);
+    fill(235, 143, 44);
+    rect(381,152,10,10);
+    rect(363,152,10,10);
+    rect(348,152,10,10);
+    rect(256,152,10,10);
+    rect(237,152,10,10);
+    rect(217,152,10,10);
+    rect(252,168,10,10);
+    rect(232,167,10,10);
+    rect(251,183,10,10);
+    rect(380,172,10,10);
+    rect(395,184,10,10);
+    rect(272,165,10,10);
+    rect(271,183,10,10);
+    rect(284,190,10,10);
+    rect(362,273,10,10);
+    rect(380,273,10,10);
+    rect(374,253,10,10);
+    rect(389,252,10,10);
+};
+fill(255, 255, 255);
+textAlign(LEFT, TOP);
+textSize(20);
+text("Ndoumbe and Milan's Game",169,30);
+drawGlobe();
+fill(255, 255, 255);
+textSize(50);
+text("JEOPARDY",181,186);
+start.draw();
+};
+
+
+
+var playGame = function(){
+    currentScene=1;
+    background(46, 46, 158);
+    stroke(0, 0, 0);
+    rect(0,0,600,40);
+    fill(0, 0, 0);
+    textSize(15);
+    var seconds =  round((millis()- time)/1000);
+
+    text("Time: "+ seconds, 48,10);
+    text("Score: " + score, 500, 10);
+
+    categories();
+    
+    for (var i = 0; i < tiles.length; i++) {
+        tiles[i].draw();
+        tiles[i].mouseHover();
+    }
+    
+    if (flippedTiles.length === 16) {
+        currentScene = 5;
+    }
+};
+
+var question;
+var a;
+var b;
+var c;
+var d;
+
+var questionScreen = function() {
+    currentScene = 2;
+    background(46, 46, 158);
+    fill(255, 255, 255);
+    rect(0, 0, 600, 40);
+    stroke(255, 255, 255);
+    fill(0, 0, 0);
+    textSize(15);
+    var seconds =  round((millis()- time)/1000);
+
+    text("Time: "+ seconds, 48,10);
+    text("Score: " + score, 500, 10);
+    
+    stroke(224, 133, 36);
+    fill(224, 133, 36);
+    textAlign(CENTER, CENTER);
+    textSize(30);
+    text(questions[k].question, 0, 100, 600, 100);
+    textAlign(LEFT, CENTER);
+    textSize(25);
+    
+
+    var question = questions[k];
+    
+    for (var i = 0; i < question.options.length; i++) {
+        fill(46, 46, 158);
+        rect(40, 240 + i*50, 425, 42);
+        stroke(224, 133, 36);
+        fill(224, 133, 36);
+        text("- " + question.options[i], 40, 260 + i*50 );
+        a = questions[k].options[0];
+        b = questions[k].options[1];
+        c = questions[k].options[2];
+        d = questions[k].options[3];
+        
+        
+    }
+};
+
+var correctScreen = function() {
+    currentScene = 3;
+    background(0, 0, 0);
+    fill(255, 255, 255);
+    rect(0, 0, 600, 40);
+    stroke(255, 255, 255);
+    fill(0, 0, 0);
+    textSize(15);
+    var seconds =  round((millis()- time)/1000);
+
+    text("Time: "+ seconds, 48,10);
+    text("Score: " + score, 500, 10);
+    
+    textSize(100);
+    textAlign(CENTER, CENTER);
+    fill(255, 255, 255);
+    text("CORRECT!!!", 300, 200);
+    cont.draw();
+};
+
+var wrongScreen = function() {
+    currentScene = 4;
+    background(0, 0, 0);
+    fill(255, 255, 255);
+    rect(0, 0, 600, 40);
+    stroke(255, 255, 255);
+    fill(0, 0, 0);
+    textSize(15);
+    var seconds =  round((millis()- time)/1000);
+
+    text("Time: "+ seconds, 48,10);
+    text("Score: " + score, 500, 10);
+    
+    textSize(100);
+    textAlign(CENTER, CENTER);
+    fill(255, 255, 255);
+    text("WRONG!!!", 300, 200);
+    cont.draw();
+};
+
+var endScreen = function() {
+    currentScene = 5;
+    background(0, 149, 255);
+    textAlign(CENTER, CENTER);
+    textSize(60);
+    text("Game Over", 300, 100);
+    textSize(50);
+    text("Your Final Score: " + score, 300, 250);
+    text("Thank You for Playing!!!", 300, 400);
+};
+
+
+mouseClicked = function() {
+    var tile;
+    
+    if (currentScene === 0) {
+        start.handleMouseClick();
+    } 
+
+    else if (currentScene === 1) {
+        for (var i = 0; i < tiles.length; i++) {
+            tile = tiles[i];
+            if (tile.isMouseWithin(mouseX, mouseY) && !tile.tileOpened) {
+                currentScene = 2;
+                tile.tileOpened = true;
+                flippedTiles.push(tile);
+                k = i;
+            }
+        }
+    }
+    else if (currentScene === 2) {
+        if (mouseX >= 40 && mouseX <= 450 && mouseY >= 240 && mouseY <= 282) {
+            if (a === questions[k].answer) {
+                currentScene = 3;
+                score = score + questions[k].points;
+            }
+            else if (a !== questions[k].answer)
+            {
+                currentScene = 4;
+            }
+        }
+        else if (mouseX >= 40 && mouseX <= 450 && mouseY >= 290 && mouseY <= 332) {
+            if (b === questions[k].answer) {
+                currentScene = 3;
+                score = score + questions[k].points;
+            }
+            else if (b !== questions[k].answer)
+            {
+                currentScene = 4;
+            }
+        }
+        else if (mouseX >= 40 && mouseX <= 450 && mouseY >= 340 && mouseY <= 382) {
+            if (c === questions[k].answer) {
+                currentScene = 3;
+                score = score + questions[k].points;
+            }
+            else if (c !== questions[k].answer)
+            {
+                currentScene = 4;
+            }
+        }
+        else if (mouseX >= 40 && mouseX <= 450 && mouseY >= 390 && mouseY <= 432) {
+            if (d === questions[k].answer) {
+                currentScene = 3;
+                score = score + questions[k].points;
+            }
+            else if (d !== questions[k].answer)
+            {
+                currentScene = 4;
+            }
+        }
+    }
+    else if (currentScene === 3 || currentScene === 4) {
+        cont.handleMouseClick();
+    }
+    else if (currentScene === 5) {
+        home.handleMouseClick();
+    }
+};
+
+
+
+//draw function to call different screens
+draw = function() {
+    if(currentScene === 0){splashScreen();}
+    else if(currentScene === 1){playGame();}
+    else if(currentScene === 2){questionScreen();}
+    else if(currentScene === 3){correctScreen();}
+    else if(currentScene === 4){wrongScreen();}
+    else if(currentScene === 5){endScreen();}
+};
+
+
+
+ 
+
