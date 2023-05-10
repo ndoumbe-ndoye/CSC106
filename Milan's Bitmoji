@@ -1,0 +1,87 @@
+var drawBitmoji = function (x, y, bitSize) {
+    //Neck
+    noStroke();
+    fill(198, 134, 66);
+    rect(x + (bitSize/100*190), y + (bitSize/100*178), (bitSize/100*20), (bitSize/100*50));
+    
+    //Head
+    stroke(0, 0, 0);
+    strokeWeight(0.25);
+    fill(198, 134, 66);//Skin Color
+    arc(x + (bitSize/100*200),y + (bitSize/100*160), (bitSize/100*43), (bitSize/100*80), 0, 180);
+    
+    //Hair
+    noStroke();
+    fill(0, 0, 0);//Black Hair
+    bezier(x + (bitSize/100*223), y + (bitSize/100*161), x + (bitSize/100*245), y + (bitSize/100*147), x + (bitSize/100*178), y + (bitSize/100*118), x + (bitSize/100*178), y + (bitSize/100*161));//Top
+    rect(x + (bitSize/100*178), y + (bitSize/100*160), (bitSize/100*3), (bitSize/100*10));//Left
+    rect(x + (bitSize/100*219), y + (bitSize/100*160), (bitSize/100*3), (bitSize/100*10));//Right
+    
+    //Eyebrows
+    noFill();
+    stroke(0, 0, 0);
+    arc(x + (bitSize/100*190), y + (bitSize/100*172), (bitSize/100*10), (bitSize/100*5), -180, 0);
+    arc(x + (bitSize/100*210), y + (bitSize/100*172), (bitSize/100*10), (bitSize/100*5), -180, 0);
+    
+    // Glasses
+    stroke(197, 201, 201);//Transparent Frame
+    strokeWeight(2);
+    line(x + (bitSize/100*180), y + (bitSize/100*168), x + (bitSize/100*219), y + (bitSize/100*168));
+    noFill();
+    quad(x+(bitSize/100*181), y+(bitSize/100*168), x+(bitSize/100*198), y+(bitSize/100*168), x+(bitSize/100*196), y+(bitSize/100*180), x+(bitSize/100*183), y+(bitSize/100*180));//Left Lense
+    quad(x+(bitSize/100*201), y+(bitSize/100*168), x+(bitSize/100*219), y+(bitSize/100*168), x+(bitSize/100*217), y+(bitSize/100*180), x+(bitSize/100*204), y+(bitSize/100*180));//Right Lense
+    
+    //Eyes
+    stroke(0, 0, 0);
+    strokeWeight(0.5);
+    fill(255,255,255);//White
+    ellipse(x + (bitSize/100*190), y + (bitSize/100*174), (bitSize/100*9), (bitSize/100*6));
+    ellipse(x + (bitSize/100*210), y + (bitSize/100*174), (bitSize/100*9), (bitSize/100*6));
+    fill(0, 0, 0);//Black eyes
+    ellipse(x + (bitSize/100*191), y + (bitSize/100*174.5), (bitSize/100*2.8), (bitSize/100*2.8));//Left
+    ellipse(x + (bitSize/100*211), y + (bitSize/100*174.5), (bitSize/100*2.8), (bitSize/100*2.8));//Right
+    
+    //Nose
+    stroke(120, 83, 41);
+    strokeWeight(1);
+    fill(198, 134, 66);
+    bezier(x + (bitSize/100*199), y + (bitSize/100*183), x + (bitSize/100*192), y + (bitSize/100*182), x + (bitSize/100*213), y + (bitSize/100*196), x + (bitSize/100*200), y + (bitSize/100*175));
+    
+    //Mouth
+    stroke(0, 0, 0);
+    fill(255, 255, 255);
+    arc(x + (bitSize/100*200), y + (bitSize/100*190), (bitSize/100*16), (bitSize/100*10), 0, 210);
+    
+    //Shirt
+    noStroke();
+    fill(255, 232, 252);
+    rect(x + (bitSize/100*175), y + (bitSize/100*207), (bitSize/100*50), (bitSize/100*70));
+    fill(171, 123, 165);
+    var dis = 212;
+    while (dis < 275) {
+        ellipse(x + (bitSize/100*200), y + (bitSize/100*dis), (bitSize/100*3), (bitSize/100*3));
+        dis += 11;
+    }
+    //Initials
+    fill(0, 0, 0);
+    textSize((bitSize/100*13));
+    text("MK", x + (bitSize/100*190), y + (bitSize/100*232));
+    
+    //Blazer
+    fill(0, 0, 0);
+    rect(x + (bitSize/100*175), y + (bitSize/100*207), (bitSize/100*15), (bitSize/100*70));
+    rect(x + (bitSize/100*210), y + (bitSize/100*207), (bitSize/100*15), (bitSize/100*70));
+    triangle(x + (bitSize/100*188), y + (bitSize/100*207), x + (bitSize/100*158), y + (bitSize/100*207), x + (bitSize/100*180), y + (bitSize/100*192));
+    triangle(x + (bitSize/100*218), y + (bitSize/100*207), x + (bitSize/100*243), y + (bitSize/100*207), x + (bitSize/100*220), y + (bitSize/100*192));
+    quad(x+(bitSize/100*158), y+(bitSize/100*207), x+(bitSize/100*181), y+(bitSize/100*200), x+(bitSize/100*163), y+(bitSize/100*276), x+(bitSize/100*145), y+(bitSize/100*275));//Left-Sleeve
+    quad(x+(bitSize/100*243), y+(bitSize/100*207), x+(bitSize/100*220), y+(bitSize/100*200), x+(bitSize/100*236), y+(bitSize/100*276), x+(bitSize/100*255), y+(bitSize/100*275));//Right-Sleeve
+    
+    //Collar
+    stroke(0, 0, 0);
+    fill(255, 232, 252);
+    strokeWeight(0.25);
+    triangle(x + (bitSize/100*183), y + (bitSize/100*211) ,x + (bitSize/100*200), y + (bitSize/100*207), x + (bitSize/100*180), y + (bitSize/100*192));
+    triangle(x + (bitSize/100*217), y + (bitSize/100*212), x + (bitSize/100*200), y + (bitSize/100*207), x + (bitSize/100*220), y + (bitSize/100*192));
+};
+
+drawBitmoji(0, 0, 100);
