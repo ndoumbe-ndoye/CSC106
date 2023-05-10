@@ -1,0 +1,41 @@
+  var drawEmoji = function(xPos,yPos,emojiHeight) {
+  noStroke();
+  fill(66, 45, 9); //skin color
+  ellipse(xPos+96*emojiHeight/150, yPos+39*emojiHeight/150, emojiHeight/150*164, emojiHeight/150*187); //head size 
+  fill(0, 0, 0); //hair color
+ ellipse(xPos+29*emojiHeight/85, yPos+-46*emojiHeight/150, emojiHeight/150*174,emojiHeight/119* 87); //hair
+ellipse(xPos-23*emojiHeight/150,yPos+45*emojiHeight/150, emojiHeight/153* 117, emojiHeight/150*127); //hair
+ellipse(xPos+-5+emojiHeight/150, yPos+124*emojiHeight/150, emojiHeight/150* 104, emojiHeight/150*99); //hair
+ellipse(xPos+40*emojiHeight/150, yPos+153*emojiHeight/150, emojiHeight/150*100,emojiHeight/124* 72); //hair
+ellipse(xPos+178*emojiHeight/150, yPos+145*emojiHeight/150, emojiHeight/150*120, emojiHeight/150*110); //hair
+ellipse(xPos+190*emojiHeight/131, yPos+42*emojiHeight/150, emojiHeight/150*119,emojiHeight/150* 135); //hair
+ellipse(xPos+153*emojiHeight/141, yPos-45*emojiHeight/150, emojiHeight/150*136, emojiHeight/174*112); //hair
+
+  fill(66, 45, 9); //skin color for neck
+  rect(xPos+ 73*emojiHeight/150, yPos+ 103*emojiHeight/150,emojiHeight/150*48,emojiHeight/150* 39);
+
+  fill(163, 0, 0); //para color
+  ellipse(xPos+ 126*emojiHeight/150, yPos-95*emojiHeight/150,emojiHeight/150* 15,emojiHeight/150* 10); //para dot
+
+  ellipse(xPos+ 109*emojiHeight/150, yPos-69*emojiHeight/150, emojiHeight/150*110, emojiHeight/150*35); //para
+  fill(250, 242, 242); //color for eyeball
+  ellipse(xPos+ 63*emojiHeight/150, yPos+ 22*emojiHeight/150, emojiHeight/150*42,emojiHeight/150* 16); //left eye ball
+  ellipse(xPos+130*emojiHeight/150, yPos+ 21*emojiHeight/150, emojiHeight/150*42, emojiHeight/150*16); //righteye ball
+
+  fill(0, 0, 0); // pupel
+  ellipse(xPos+ 63*emojiHeight/150, yPos+ 23*emojiHeight/150 ,emojiHeight/150* 10, emojiHeight/150*10); // left eye pupel
+  ellipse(xPos+ 130*emojiHeight/150, yPos+ 22*emojiHeight/150, emojiHeight/150*10,emojiHeight/150* 10); //right eye pupel
+    
+  fill(235, 119, 30); //SHIRT COLOR
+  ellipse(xPos+ 97*emojiHeight/150, yPos+ 232*emojiHeight/150, emojiHeight/150*154, emojiHeight/150* 200); //SHIRT
+  ellipse(xPos+29*emojiHeight/150, yPos+ 208*emojiHeight/150,emojiHeight/150* 56, emojiHeight/150*83);
+  ellipse(xPos+169*emojiHeight/150, yPos+ 208*emojiHeight/150, emojiHeight/150*56, emojiHeight/150*83);
+
+  fill(0, 0, 0); //eyebrow color
+  rect(xPos+ 43*emojiHeight/150, yPos+3*emojiHeight/150, emojiHeight/150*37, emojiHeight/150*3, emojiHeight/150*26); //left eyebrow
+  rect(xPos+ 109*emojiHeight/150, yPos+3*emojiHeight/150, emojiHeight/150*37, emojiHeight/150*3, emojiHeight/150*26); //right eyebrow
+  rect(xPos+ 101*emojiHeight/150, yPos+19*emojiHeight/150, emojiHeight/150*2, emojiHeight/150*35);
+  rect(xPos+ 78*emojiHeight/150, yPos+51*emojiHeight/150,emojiHeight/150* 25, emojiHeight/150*2); //nose
+    fill(255, 255, 255);//teeth color
+    ellipse(xPos+101*emojiHeight/154,yPos+81*emojiHeight/150,emojiHeight/149*65, emojiHeight/327*30);//teeth
+};
