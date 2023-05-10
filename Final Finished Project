@@ -1,5 +1,8 @@
 
 //global variables
+// Global config
+var NUM_COLS = 4;
+var NUM_ROWS = 4;
 var currentScene = 0;
 var time=0;
 var score = 0;
@@ -135,7 +138,10 @@ var drawBitmoji = function (x, y, bitSize) {
 
 
 
-//Button Class
+/*** Button Class
+ * From Khan Acedemy
+ * With some modifcations
+***/
 var Button = function(config) {
     this.x = config.x || 0;
     this.y = config.y || 0;
@@ -148,6 +154,7 @@ var Button = function(config) {
     this.color = config.color || color(224, 133, 36);
 };
 
+// Draw function for button
 Button.prototype.draw = function() {
     fill(this.color);
     rect(this.x, this.y, this.width, this.height, 14);
@@ -157,6 +164,7 @@ Button.prototype.draw = function() {
     text(this.label, this.labelX, this.labelY);
 };
 
+//Check if mouse is inside button
 Button.prototype.isMouseInside = function() {
     return mouseX > this.x &&
            mouseX < (this.x + this.width) &&
@@ -164,13 +172,15 @@ Button.prototype.isMouseInside = function() {
            mouseY < (this.y + this.height);
 };
 
+//Runs this code if Mouse inside button and clicked
 Button.prototype.handleMouseClick = function() {
     if (this.isMouseInside()) {
         this.onClick();
     }
 };
+/*** End Button Class ***/
 
-
+/*** Start Button ***/
 var start = new Button({
     x: 230,
     y: 380,
@@ -184,6 +194,7 @@ var start = new Button({
     }
 });
 
+/*** COntinue Button ***/
 var cont = new Button({
     x: 200,
     y: 450,
@@ -196,6 +207,7 @@ var cont = new Button({
     }
 });
 
+/*** Home Button ***/
 var home = new Button({
     x: 150, 
     y: 263,
@@ -209,7 +221,9 @@ var home = new Button({
     }
 });
 
-//Tile Class
+/*** Tile Class
+ * Inspired by matching game assignment
+***/
 var Tile = function(x, y, question) {
     this.x = x;
     this.y = y;
@@ -219,6 +233,7 @@ var Tile = function(x, y, question) {
     this.color = color(0, 51, 255);
 };
 
+//Draw function for tile
 Tile.prototype.draw = function() {
     fill(this.color);
     strokeWeight(2);
@@ -233,11 +248,13 @@ Tile.prototype.draw = function() {
     }
 };
 
+//Check if mouse is inside tile
 Tile.prototype.isMouseWithin = function(x, y) {
     return x >= this.x && x <= this.x + this.size &&
         y >= this.y && y <= this.y + this.size;
 };
 
+//Changes color of tile when mouse passes over
 Tile.prototype.mouseHover = function() {
     if (this.isMouseWithin(mouseX, mouseY)) {
         this.color = color(0, 132, 255);
@@ -246,12 +263,12 @@ Tile.prototype.mouseHover = function() {
         this.color = color(0, 51, 255);
     }
 };
+/*** End Tile Class ***/
 
-// Global config
-var NUM_COLS = 4;
-var NUM_ROWS = 4;
 
-/*** QUESTIONS ***/
+/*** QUESTIONS 
+ * Sources cited in github
+***/
 var questions = [ 
     // History 
     { 
@@ -369,7 +386,7 @@ var questions = [
     
 ];
 
-
+//Function for putting up Categories at top of screen
 var categories = function() {
     fill(0, 37, 186);
     rect(42,67,119,44);
@@ -386,6 +403,7 @@ var categories = function() {
 
 // Create the tiles
 var tiles = [];
+// Variable k is used to keep track of the questions linked to each tile
 var k = 0;
 for (var i = 0; i < NUM_COLS; i++) {
     for (var j = 0; j < NUM_ROWS; j++) {
@@ -399,7 +417,7 @@ for (var i = 0; i < NUM_COLS; i++) {
 
 
 
-
+/*** Function for Splash Screen ***/
 var splashScreen = function(){
 currentScene=0;
 flippedTiles = [];
@@ -438,11 +456,11 @@ drawGlobe();
 fill(255, 255, 255);
 textSize(50);
 text("JEOPARDY",181,186);
-start.draw();
+start.draw(); //Draws start button
 };
+/*** End Splash Screen Function ***/
 
-
-
+/*** Function for Play Screen ***/
 var playGame = function(){
     currentScene=1;
     background(46, 46, 158);
@@ -468,13 +486,16 @@ var playGame = function(){
         currentScene = 5;
     }
 };
+/*** End Function for Play Screen ***/
 
 var question;
+// Varibles a-d are for question options
 var a;
 var b;
 var c;
 var d;
 
+/*** Function for Question Screen ***/
 var questionScreen = function() {
     currentScene = 2;
     background(46, 46, 158);
@@ -483,8 +504,9 @@ var questionScreen = function() {
     stroke(255, 255, 255);
     fill(0, 0, 0);
     textSize(15);
+    
     var seconds =  round((millis()- time)/1000);
-
+    //Time tracker
     text("Time: "+ seconds, 48,10);
     text("Score: " + score, 500, 10);
     
@@ -497,23 +519,25 @@ var questionScreen = function() {
     textSize(25);
     
 
-    var question = questions[k];
+    question = questions[k];
     
+    // This loop draws each of the options for each question
     for (var i = 0; i < question.options.length; i++) {
         fill(46, 46, 158);
         rect(40, 240 + i*50, 425, 42);
         stroke(224, 133, 36);
         fill(224, 133, 36);
         text("- " + question.options[i], 40, 260 + i*50 );
+        //Asigns each option of each question to the variables a-d
         a = questions[k].options[0];
         b = questions[k].options[1];
         c = questions[k].options[2];
         d = questions[k].options[3];
-        
-        
     }
 };
+/*** End Function for Question Screen ***/
 
+/*** Correct Screen for correct guess ***/
 var correctScreen = function() {
     currentScene = 3;
     background(0, 0, 0);
@@ -531,9 +555,11 @@ var correctScreen = function() {
     textAlign(CENTER, CENTER);
     fill(255, 255, 255);
     text("CORRECT!!!", 300, 200);
-    cont.draw();
+    cont.draw(); //Draws continue screen
 };
+/*** End Correct Screen Function ***/
 
+/*** Wrong Screen for wrong guess ***/
 var wrongScreen = function() {
     currentScene = 4;
     background(0, 0, 0);
@@ -551,9 +577,11 @@ var wrongScreen = function() {
     textAlign(CENTER, CENTER);
     fill(255, 255, 255);
     text("WRONG!!!", 300, 200);
-    cont.draw();
+    cont.draw(); //Draw continue button
 };
+/*** End Wrong Screen Function ***/
 
+/*** Function for End Screen ***/
 var endScreen = function() {
     currentScene = 5;
     background(0, 149, 255);
@@ -564,8 +592,9 @@ var endScreen = function() {
     text("Your Final Score: " + score, 300, 250);
     text("Thank You for Playing!!!", 300, 400);
 };
+/*** End of End Screen Function ***/
 
-
+/*** Function for when mouse is Clicked ***/
 mouseClicked = function() {
     var tile;
     
@@ -574,27 +603,40 @@ mouseClicked = function() {
     } 
 
     else if (currentScene === 1) {
+        // This for loop handles what happens when each tile is clicked
         for (var i = 0; i < tiles.length; i++) {
             tile = tiles[i];
             if (tile.isMouseWithin(mouseX, mouseY) && !tile.tileOpened) {
                 currentScene = 2;
+                
+                //The tileOpened is a very important part of this because this makes sure each tile can only be clicked once regardless of clicked answer. 
                 tile.tileOpened = true;
+                
                 flippedTiles.push(tile);
                 k = i;
             }
         }
     }
     else if (currentScene === 2) {
+        // This next part handles the clicking on each of the options
+        
+        // FOr option a
         if (mouseX >= 40 && mouseX <= 450 && mouseY >= 240 && mouseY <= 282) {
+            // The varibles a-d refer back to the options. With a being the first and d being the last option. 
+            // Then it check if that option is the same as the answer and if it is, award the points value of that question to the score. 
             if (a === questions[k].answer) {
+                //Then if answer is correct brings you to correct screen
                 currentScene = 3;
                 score = score + questions[k].points;
             }
             else if (a !== questions[k].answer)
             {
+                //Then if answer is wrong brings you to wrong screen
                 currentScene = 4;
             }
         }
+        
+        // For option b
         else if (mouseX >= 40 && mouseX <= 450 && mouseY >= 290 && mouseY <= 332) {
             if (b === questions[k].answer) {
                 currentScene = 3;
@@ -605,6 +647,8 @@ mouseClicked = function() {
                 currentScene = 4;
             }
         }
+        
+        // For option c
         else if (mouseX >= 40 && mouseX <= 450 && mouseY >= 340 && mouseY <= 382) {
             if (c === questions[k].answer) {
                 currentScene = 3;
@@ -615,6 +659,8 @@ mouseClicked = function() {
                 currentScene = 4;
             }
         }
+        
+        // For option d
         else if (mouseX >= 40 && mouseX <= 450 && mouseY >= 390 && mouseY <= 432) {
             if (d === questions[k].answer) {
                 currentScene = 3;
@@ -627,6 +673,7 @@ mouseClicked = function() {
         }
     }
     else if (currentScene === 3 || currentScene === 4) {
+        // If on correct or wrong screen, this calls the function that handles what to do when mouse is clicked. 
         cont.handleMouseClick();
     }
     else if (currentScene === 5) {
