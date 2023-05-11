@@ -289,7 +289,7 @@ var questions = [
         category: "History", 
         points: 300, 
         question: "The orginal name of the Walt Disney Company", 
-        options: ["Disney Production", "The Walt Disney Studio", "Disney Brothers Cartoon Sudio", "Walt Disney Animation"], 
+        options: ["Disney Production", "The Walt Disney Studio", "Disney Brothers Cartoon Studio", "Walt Disney Animation"], 
         answer: "Disney Brothers Cartoon Studio"
     }, 
     {
@@ -345,8 +345,8 @@ var questions = [
         category: "TV Shows",
         points: 300, 
         question: "This was Hannah Montana's first boyfriend", 
-        options: ["Alex", "Justin", "Max", "Harper"],
-        answer: "Alex"
+        options: ["Jessie", "Justin", "Max", "Harper"],
+        answer: "Jessie"
     },
     {
         category: "TV Shows",
@@ -587,6 +587,7 @@ var endScreen = function() {
     background(0, 149, 255);
     textAlign(CENTER, CENTER);
     textSize(60);
+    fill(255, 255, 255);
     text("Game Over", 300, 100);
     textSize(50);
     text("Your Final Score: " + score, 300, 250);
